@@ -1,0 +1,22 @@
+# Kyle Johnsen, Jeff Johnston, Brett Kaplan
+# Op Sys Project 1
+# Process Scheduling Simulation
+# 10/20/11
+import random
+
+#import process names from a text file, stripping newlines
+with open("names.txt") as in_file:
+    names = in_file.readlines()
+for i in range(len(names)):
+    names[i] = names[i].rstrip("\n")
+
+class Process(object):
+    def __init__(self, start_time):
+        self.start_time = start_time
+        self.run_progress = 0
+        self.name = random.choice(names)
+        self.time_req = random.randint(500,7500)
+    def run(self, runtime):
+        self.run_progress += runtime
+    def isDone(self):
+        return self.run_progress > self.time_req
