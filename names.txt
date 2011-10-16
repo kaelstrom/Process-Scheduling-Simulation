@@ -1,0 +1,7 @@
+fakenotepad.exe
+explorer.exe
+a.out
+dskdfrg.exe
+passdl.x
+vi
+xdbg
