@@ -1,19 +1,27 @@
-
 class algoClass()
-    def __init__(self, type, time):
+    def __init__(self, type, procList):
         self.type = type
-        self.procs = []
-        self.time = time
-        self.currentproc
+        self.inMemProcs = []
+        self.time = 0
+        self.toAddProcs = procList
+        
         
     #runs the current process in cpu
     def run(self):
+        #if new to CPU, output so
+        if self.currentProc.run_progress == 0
+            self.output(self.currentProc, "Started")
+        self.currentProc.run(1)
+        self.time += 1
+        
+    #outputs information 
+    def output(self, outProc, reason)
+        pass #possible, CS(Context Switch), Start(New to CPU), Queued(Added to CPU Queue)
+    
+    #adds a process to memory
+    def organizeProcs(self)
         pass
         
-    #adds a process to memory
-    def addProc(self, proc)
-        self.procs.append(proc)
-    
     #switches a process into the cpu
     def contextSwitch(self, nextproc):
         pass
