@@ -6,7 +6,7 @@ algoFCFS = algo("FCFS", time)
 algoFCFS = algo("SJF", time)     
 algoFCFS = algo("PSJF", time)     
 algoFCFS = algo("RR", time)     
-algoFCFS = algo("Pri", time)
+algoFCFS = algo("PRI", time)
 
 def makeProcs():
     pass
