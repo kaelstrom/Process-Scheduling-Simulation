@@ -2,14 +2,15 @@ from algoClass import algoClass
 from process import Process
 time = 0
 procs = []
-algoFCFS = algo("FCFS", time)     
-algoFCFS = algo("SJF", time)     
-algoFCFS = algo("PSJF", time)     
-algoFCFS = algo("RR", time)     
-algoFCFS = algo("PRI", time)
 
 def makeProcs():
-    pass
+    procs = [Process(i, 0) for i in range(20)]
+    
+algoFCFS = algoClass("FCFS", procs)     
+algoSJF = algoClass("SJF", procs)     
+algoPSJF = algoClass("PSJF", procs)     
+algoRR = algoClass("RR", procs)     
+algoPRI = algoClass("PRI", procs)
 
 def runAlgo( algo ):
     global time
@@ -18,13 +19,6 @@ def runAlgo( algo ):
         algo.checkSwitch()
         algo.run()
         
-
-        
-        
-        
-
-        
-     
 runAlgo(algoFCFS)
 
 
