@@ -1,7 +1,8 @@
-# Kyle Johnsen, Jeff Johnston, Brett Kaplan
+# Nathan Black, Kyle Johnsen
 # Op Sys Project 1
 # Process Scheduling Simulation
 # 10/20/11
+
 import random
 
 #import process names from a text file, stripping newlines

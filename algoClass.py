@@ -1,8 +1,14 @@
+# Nathan Black, Kyle Johnsen
+# Op Sys Project 1
+# Process Scheduling Simulation
+# 10/20/11
+
 class algoClass(object):
-    def __init__(self, type, procList, time):
+    def __init__(self, type, procList, rtime):
+        print(procList)
         self.type = type
         self.inMemProcs = []
-        self.time = time
+        self.time = rtime
         self.toAddProcs = procList
         self.organizeProcs()
         self.currentProc = self.inMemProcs[0]
@@ -17,17 +23,18 @@ class algoClass(object):
         
     #outputs information 
     def output(self, outProc, reason):
-        pass #possible, CS(Context Switch), Start(New to CPU), Queued(Added to CPU Queue)
+        #possible, CS(Context Switch), Start(New to CPU), Queued(Added to CPU Queue)
+        print("[Time:%d %s PID %d %s", (self.time, outProc.name, outProc.pid, reason))
     
     #adds a process to memory
     def organizeProcs(self):
-        j = len(self.inMemProcs)
         for proc in self.toAddProcs:
+            j = len(self.inMemProcs)
             if proc.start_time <= self.time:
                 if self.time != 0:
                     self.output(proc, "Queued")
-                self.inMemProcs[j]= proc
-                #delete self.toAddProcs[i], i--
+                self.inMemProcs.append(proc)
+                self.toAddProcs[i].erase(proc)
         #if self.type == "FCFS" || self.type == "RR":
         #elif self.type == "SJF" || self.type == "PSFJ":
             #organize by inMemProcs.time_req (think about which one is currentProc
