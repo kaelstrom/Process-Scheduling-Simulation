@@ -3,13 +3,14 @@
 # Process Scheduling Simulation
 # 10/20/11
 
+import copy
+
 class algoClass(object):
     def __init__(self, type, procList, rtime):
-        print(procList)
         self.type = type
         self.inMemProcs = []
         self.time = rtime
-        self.toAddProcs = procList
+        self.toAddProcs = copy.deepcopy(procList)
         self.organizeProcs()
         self.currentProc = self.inMemProcs[0]
         
@@ -17,24 +18,32 @@ class algoClass(object):
     def run(self):
         #if new to CPU, output so
         if self.currentProc.run_progress == 0:
-            self.output(self.currentProc, "Started")
+            self.output(["started", self.currentProc])
         self.currentProc.run(1)
-        self.time += 1
+        self.time[0] += 1
         
     #outputs information 
-    def output(self, outProc, reason):
-        #possible, CS(Context Switch), Start(New to CPU), Queued(Added to CPU Queue)
-        print("[Time:%d %s PID %d %s", (self.time, outProc.name, outProc.pid, reason))
+    def output(self, args):
+        #possible, cs(Context Switch), started(New to CPU), created(Added to CPU Queue)
+        if args[0] == "created":
+            proc = args[1]
+            print("[time: %dms] Process %d created (requiring %dms CPU time)" 
+                    %(self.time[0], proc.pid, proc.time_req))
+        elif args[0] == "started":
+            proc = args[1]
+            print("[time: %dms] Process %d accessed CPU for the first time (wait time %dms)" 
+                    %(self.time[0], proc.pid, (self.time[0] - proc.start_time)))
+            
     
     #adds a process to memory
     def organizeProcs(self):
         for proc in self.toAddProcs:
             j = len(self.inMemProcs)
-            if proc.start_time <= self.time:
-                if self.time != 0:
-                    self.output(proc, "Queued")
+            if proc.start_time <= self.time[0]:
+                if self.time[0] != 0:
+                    self.output(["created", proc])
                 self.inMemProcs.append(proc)
-                self.toAddProcs[i].erase(proc)
+                self.toAddProcs.remove(proc)
         #if self.type == "FCFS" || self.type == "RR":
         #elif self.type == "SJF" || self.type == "PSFJ":
             #organize by inMemProcs.time_req (think about which one is currentProc
@@ -55,7 +64,7 @@ class algoClass(object):
         if self.type == "FCFS" or self.type == "SJF":
             return 0;
         elif self.type == "PSJF":
-            if self.findProc(currentProc)!=0:
+            if self.findProc(self.currentProc)!=0:
                 self.contextSwitch(self.inMemProcs[0])
         elif self.type == "RR":
             self.contextSwitch(self.inMemProcs[1])

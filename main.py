@@ -5,7 +5,7 @@
 
 from algoClass import algoClass
 from process import Process
-time = 0
+time = [0]
 procs = []
 
 def makeProcs():
@@ -21,12 +21,16 @@ algoRR = algoClass("RR", procs, time)
 algoPRI = algoClass("PRI", procs, time)
 
 def runAlgo( algo ):
-    global time
-    time = 0
-    while( time < 100000 ):
+    time[0] = 0
+    print("Beginning a run of %s" % algo.type)
+    while( time[0] < 10000 ):
         algo.checkSwitch()
         algo.run()
         
 runAlgo(algoFCFS)
+runAlgo(algoSJF)
+runAlgo(algoPSJF)
+runAlgo(algoRR)
+runAlgo(algoPRI)
 
 
