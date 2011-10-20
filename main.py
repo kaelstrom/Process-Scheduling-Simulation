@@ -7,30 +7,35 @@ from algoClass import algoClass
 from process import Process
 time = [0]
 procs = []
+numProcs = 20
+stats = [[0, 0, 0] for i in range(numProcs)]
 
 def makeProcs():
     global procs
-    procs = [Process(i, 0) for i in range(20)]
+    procs = [Process(i, 0) for i in range(numProcs)]
     
 makeProcs()
     
-algoFCFS = algoClass("FCFS", procs, time)     
-algoSJF = algoClass("SJF", procs, time)     
-algoPSJF = algoClass("PSJF", procs, time)     
-algoRR = algoClass("RR", procs, time)     
-algoPRI = algoClass("PRI", procs, time)
 
 def runAlgo( algo ):
     time[0] = 0
+    stats = [[0, 0, 0] for i in range(numProcs)]
     print("Beginning a run of %s" % algo.type)
     while( time[0] < 100000 ):
         algo.checkSwitch()
         algo.run()
         
-runAlgo(algoFCFS)
-runAlgo(algoSJF)
-runAlgo(algoPSJF)
-runAlgo(algoRR)
-runAlgo(algoPRI)
+        
+
+algoFCFS = algoClass("FCFS", procs, time, stats) 
+runAlgo(algoFCFS)    
+#algoSJF = algoClass("SJF", procs, time, stats)  
+#runAlgo(algoSJF)   
+#algoPSJF = algoClass("PSJF", procs, time, stats) 
+#runAlgo(algoPSJF)    
+#algoRR = algoClass("RR", procs, time, stats)   
+#runAlgo(algoRR)  
+#algoPRI = algoClass("PRI", procs, time, stats)
+#runAlgo(algoPRI)
 
 

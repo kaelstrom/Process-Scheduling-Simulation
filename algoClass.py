@@ -6,7 +6,8 @@
 import copy
 
 class algoClass(object):
-    def __init__(self, type, procList, rtime):
+    def __init__(self, type, procList, rtime, stats):
+        self.stats = stats
         self.type = type
         self.inMemProcs = []
         self.time = rtime
@@ -19,6 +20,7 @@ class algoClass(object):
         #if new to CPU, output so
         if self.currentProc.run_progress == 0:
             self.output(["started", self.currentProc])
+            self.stats[self.currentProc.pid][1] = self.time[0]
         if not self.currentProc.isDone():
             self.currentProc.run(1)
         self.time[0] += 1
@@ -45,7 +47,7 @@ class algoClass(object):
     def organizeProcs(self):
         for proc in self.toAddProcs:
             j = len(self.inMemProcs)
-            if proc.start_time <= self.time[0]:
+            if proc.start_time == self.time[0]:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
                 self.toAddProcs.remove(proc)
@@ -70,6 +72,8 @@ class algoClass(object):
     def checkSwitch(self):
         if self.currentProc.isDone():
             if len(self.inMemProcs) > 1:
+                self.stats[self.currentProc.pid][0] = self.time[0] - self.currentProc.start_time
+                self.stats[self.currentProc.pid][2] = self.time[0] - self.currentProc.time_req - self.currentProc.start_time
                 self.contextSwitch(self.inMemProcs[1])
                 self.inMemProcs.remove(self.inMemProcs[0])
         if self.type == "FCFS" or self.type == "SJF":
