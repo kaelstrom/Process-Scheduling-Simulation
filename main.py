@@ -23,7 +23,7 @@ algoPRI = algoClass("PRI", procs, time)
 def runAlgo( algo ):
     time[0] = 0
     print("Beginning a run of %s" % algo.type)
-    while( time[0] < 10000 ):
+    while( time[0] < 100000 ):
         algo.checkSwitch()
         algo.run()
         

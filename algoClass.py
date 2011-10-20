@@ -19,7 +19,8 @@ class algoClass(object):
         #if new to CPU, output so
         if self.currentProc.run_progress == 0:
             self.output(["started", self.currentProc])
-        self.currentProc.run(1)
+        if not self.currentProc.isDone():
+            self.currentProc.run(1)
         self.time[0] += 1
         
     #outputs information 
@@ -33,6 +34,11 @@ class algoClass(object):
             proc = args[1]
             print("[time: %dms] Process %d accessed CPU for the first time (wait time %dms)" 
                     %(self.time[0], proc.pid, (self.time[0] - proc.start_time)))
+        elif args[0] == "cs":
+            proc1 = args[1]
+            proc2 = args[2]
+            print("[time: %dms] Context switch (swapped out process %d for process %d)" 
+                    %(self.time[0], proc1.pid, proc2.pid))
             
     
     #adds a process to memory
@@ -40,8 +46,7 @@ class algoClass(object):
         for proc in self.toAddProcs:
             j = len(self.inMemProcs)
             if proc.start_time <= self.time[0]:
-                if self.time[0] != 0:
-                    self.output(["created", proc])
+                self.output(["created", proc])
                 self.inMemProcs.append(proc)
                 self.toAddProcs.remove(proc)
         #if self.type == "FCFS" || self.type == "RR":
@@ -56,11 +61,17 @@ class algoClass(object):
         pass
     
     #check if round robin, else just switch and do normally
-    def contextSwitch(self, nextproc):
-        pass
+    def contextSwitch(self, nextProc):
+        self.output(["cs", self.currentProc, nextProc])
+        self.currentProc = nextProc
+        self.time[0] += 8
         
     #checks if process needs to be switched based on the algorithm
     def checkSwitch(self):
+        if self.currentProc.isDone():
+            if len(self.inMemProcs) > 1:
+                self.contextSwitch(self.inMemProcs[1])
+                self.inMemProcs.remove(self.inMemProcs[0])
         if self.type == "FCFS" or self.type == "SJF":
             return 0;
         elif self.type == "PSJF":
