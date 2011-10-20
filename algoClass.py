@@ -50,7 +50,7 @@ class algoClass(object):
             if proc.start_time == self.time[0]:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
-                self.toAddProcs.remove(proc)
+        self.toAddProcs = []
         #if self.type == "FCFS" || self.type == "RR":
         #elif self.type == "SJF" || self.type == "PSFJ":
             #organize by inMemProcs.time_req (think about which one is currentProc
