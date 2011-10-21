@@ -57,9 +57,9 @@ class algoClass(object):
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
                 self.toAddProcs.remove(proc)
-        #if self.type == "FCFS" || self.type == "RR":
+        if self.type == "FCFS" || self.type == "RR":
         #elif self.type == "SJF" || self.type == "PSFJ":
-            #organize by inMemProcs.time_req (think about which one is currentProc
+            #organize by inMemProcs.time_req (think about which one is currentProc)
         #elif self.type == "Pri":
             
     #finds the process given in the self.inMemProcs list
@@ -97,6 +97,7 @@ class algoClass(object):
             if self.findProc(self.currentProc)!=0:
                 self.contextSwitch(self.inMemProcs[0])
         elif self.type == "RR":
+            pass
             #if time slice is over
                 #self.contextSwitch(self.inMemProcs[1])
         elif self.type == "PRI":
