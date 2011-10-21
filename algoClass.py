@@ -52,16 +52,11 @@ class algoClass(object):
     #adds a process to memory
     def organizeProcs(self):
         for proc in self.toAddProcs:
-            if proc.start_time == self.time[0] && self.time[0]!=0:
+            if proc.start_time == self.time[0]:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
-<<<<<<< HEAD
         self.toAddProcs = []
         #if self.type == "FCFS" || self.type == "RR":
-=======
-                self.toAddProcs.remove(proc)
-        if self.type == "FCFS" || self.type == "RR":
->>>>>>> 26d4c588f6f5aa3547c0d7845fc5d7d9cdae4ae3
         #elif self.type == "SJF" || self.type == "PSFJ":
             #organize by inMemProcs.time_req (think about which one is currentProc)
         #elif self.type == "Pri":
@@ -76,8 +71,7 @@ class algoClass(object):
     def contextSwitch(self, nextProc):
         if self.currentProc.isDone():
             self.output(["finished", self.currentProc])
-        else:
-            self.output(["cs", self.currentProc, nextProc])
+        self.output(["cs", self.currentProc, nextProc])
             #if self.type == "RR":
                 #tempProc = self.inMemProcs[0]
                 #self.inMemProcs.remove(self.inMemProcs[0])
