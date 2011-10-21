@@ -2,8 +2,10 @@
 # Op Sys Project 1
 # Process Scheduling Simulation
 # 10/20/11
-
 import copy
+
+timeCS = 8
+timeSlice = 100
 
 class algoClass(object):
     def __init__(self, type, procList, rtime, stats):
@@ -46,8 +48,8 @@ class algoClass(object):
             proc = args[1]
             print("[time: %dms] Process %d terminated (turnaround time %dms, total wait time %dms)"
                     %(self.time[0], proc.pid, (self.time[0]-proc.start_time), (self.time[0]-proc.start_time-proc.time_req)))
-            proc.totwait = (self.time[0]-proc.start_time-proc.time_req)
-            proc.turnaround = (self.time[0]-proc.start_time)
+            #proc.totwait = (self.time[0]-proc.start_time-proc.time_req)
+            #proc.turnaround = (self.time[0]-proc.start_time)
     
     #adds a process to memory
     def organizeProcs(self):
@@ -81,7 +83,7 @@ class algoClass(object):
             #elif self.type == "PSJF"|| self.type =="PRI":
                 #self.currentProc = nextProc
         self.currentProc = nextProc
-        self.time[0] += 8
+        self.time[0] += timeCS
         
     #checks if process needs to be switched based on the algorithm
     def checkSwitch(self):
