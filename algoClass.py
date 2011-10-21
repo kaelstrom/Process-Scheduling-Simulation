@@ -45,7 +45,7 @@ class algoClass(object):
         elif args[0] == "finished":
             proc = args[1]
             print("[time: %dms] Process %d terminated (turnaround time %dms, total wait time %dms)"
-                    %(self.time[0], (self.time[0]-proc.start_time), (self.time[0]-proc.start_time-proc.time_req)))
+                    %(self.time[0], proc.pid, (self.time[0]-proc.start_time), (self.time[0]-proc.start_time-proc.time_req)))
             proc.totwait = (self.time[0]-proc.start_time-proc.time_req)
             proc.turnaround = (self.time[0]-proc.start_time)
     
