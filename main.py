@@ -5,6 +5,7 @@
 
 from algoClass import algoClass
 from process import Process
+import random
 time = [0]
 procs = []
 numProcs = 20
@@ -19,16 +20,16 @@ def outputStats(stats):
     totwaits = [x[2] for x in stats]
     
     print("               Max        Min        Avg")
-    print("Turnaround     %dms       %dms       %dms"
-        %(max(turnarounds), min(turnarounds), sum(turnarounds)/len(turnarounds)))
-    print("Initial Wait   %dms       %dms       %dms"
-        %(max(initwaits), min(initwaits), sum(initwaits)/len(initwaits)))
-    print("Total Wait     %dms       %dms       %dms"
-        %(max(totwaits), min(totwaits), sum(totwaits)/len(totwaits)))
+    print("Turnaround     %dms       %dms       %.3fms"
+        %(max(turnarounds), min(turnarounds), float(sum(turnarounds))/len(turnarounds)))
+    print("Initial Wait   %dms       %dms       %.3fms"
+        %(max(initwaits), min(initwaits), float(sum(initwaits))/len(initwaits)))
+    print("Total Wait     %dms       %dms       %.3fms"
+        %(max(totwaits), min(totwaits), float(sum(totwaits))/len(totwaits)))
 
 def makeProcs():
     global procs
-    procs = [Process(i, 0) for i in range(numProcs)]
+    procs = [Process(i, 0) for i in range(numProcs/4)] + [Process(i + numProcs/4, random.randint(100,2500)) for i in range(3*numProcs/4)]
     
 makeProcs()
     
