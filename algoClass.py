@@ -27,21 +27,27 @@ class algoClass(object):
         
     #outputs information 
     def output(self, args):
-        #possible, cs(Context Switch), started(New to CPU), created(Added to CPU Queue)
+        #possible, cs(Context Switch), started(New to CPU), created(Added to CPU Queue), finished (completed by CPU)
         if args[0] == "created":
             proc = args[1]
             print("[time: %dms] Process %d created (requiring %dms CPU time)" 
                     %(self.time[0], proc.pid, proc.time_req))
         elif args[0] == "started":
             proc = args[1]
-            print("[time: %dms] Process %d accessed CPU for the first time (wait time %dms)" 
+            print("[time: %dms] Process %d accessed CPU for the first time (initial wait time %dms)" 
                     %(self.time[0], proc.pid, (self.time[0] - proc.start_time)))
+            proc.initwait = (self.time[0] - proc.start_time)
         elif args[0] == "cs":
             proc1 = args[1]
             proc2 = args[2]
             print("[time: %dms] Context switch (swapped out process %d for process %d)" 
                     %(self.time[0], proc1.pid, proc2.pid))
-            
+        elif args[0] == "finished":
+            proc = args[1]
+            print("[time: %dms] Process %d terminated (turnaround time %dms, total wait time %dms)"
+                    %(self.time[0], (self.time[0]-proc.start_time), (self.time[0]-proc.start_time-proc.time_req)))
+            proc.totwait = (self.time[0]-proc.start_time-proc.time_req)
+            proc.turnaround = (self.time[0]-proc.start_time)
     
     #adds a process to memory
     def organizeProcs(self):
@@ -64,7 +70,16 @@ class algoClass(object):
     
     #check if round robin, else just switch and do normally
     def contextSwitch(self, nextProc):
-        self.output(["cs", self.currentProc, nextProc])
+        if self.currentProc.isDone():
+            self.output(["finished", self.currentProc])
+        else:
+            self.output(["cs", self.currentProc, nextProc])
+            #if self.type == "RR":
+                #tempProc = self.inMemProcs[0]
+                #self.inMemProcs.remove(self.inMemProcs[0])
+                #self.inMemProcs.append(tempProc)
+            #elif self.type == "PSJF"|| self.type =="PRI":
+                #self.currentProc = nextProc
         self.currentProc = nextProc
         self.time[0] += 8
         
@@ -82,7 +97,8 @@ class algoClass(object):
             if self.findProc(self.currentProc)!=0:
                 self.contextSwitch(self.inMemProcs[0])
         elif self.type == "RR":
-            self.contextSwitch(self.inMemProcs[1])
+            #if time slice is over
+                #self.contextSwitch(self.inMemProcs[1])
         elif self.type == "PRI":
             pass
             #do whatever
