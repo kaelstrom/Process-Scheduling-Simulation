@@ -59,7 +59,7 @@ class algoClass(object):
             if proc.start_time == self.time[0]:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
-        self.toAddProcs = []
+        #self.toAddProcs = []
         if self.type == "FCFS" or self.type == "RR":
             pass
         elif self.type == "SJF" or self.type == "PSJF":
