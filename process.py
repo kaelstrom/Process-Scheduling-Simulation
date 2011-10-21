@@ -12,6 +12,9 @@ class Process(object):
         self.pid = pid
         self.time_req = random.randint(500,7500)
         self.priority = random.randint(0,4)
+        self.initwait = 0
+        self.totwait = 0
+        self.turnaround = 0
     def run(self, runtime):
         self.run_progress += runtime
     def isDone(self):
