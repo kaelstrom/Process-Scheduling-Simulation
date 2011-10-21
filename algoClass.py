@@ -52,14 +52,18 @@ class algoClass(object):
     #adds a process to memory
     def organizeProcs(self):
         for proc in self.toAddProcs:
-            j = len(self.inMemProcs)
-            if proc.start_time == self.time[0]:
+            if proc.start_time == self.time[0] && self.time[0]!=0:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
+<<<<<<< HEAD
         self.toAddProcs = []
         #if self.type == "FCFS" || self.type == "RR":
+=======
+                self.toAddProcs.remove(proc)
+        if self.type == "FCFS" || self.type == "RR":
+>>>>>>> 26d4c588f6f5aa3547c0d7845fc5d7d9cdae4ae3
         #elif self.type == "SJF" || self.type == "PSFJ":
-            #organize by inMemProcs.time_req (think about which one is currentProc
+            #organize by inMemProcs.time_req (think about which one is currentProc)
         #elif self.type == "Pri":
             
     #finds the process given in the self.inMemProcs list
@@ -97,6 +101,7 @@ class algoClass(object):
             if self.findProc(self.currentProc)!=0:
                 self.contextSwitch(self.inMemProcs[0])
         elif self.type == "RR":
+            pass
             #if time slice is over
                 #self.contextSwitch(self.inMemProcs[1])
         elif self.type == "PRI":
