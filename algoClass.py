@@ -56,8 +56,10 @@ class algoClass(object):
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
         self.toAddProcs = []
-        #if self.type == "FCFS" || self.type == "RR":
-        #elif self.type == "SJF" || self.type == "PSFJ":
+        if self.type == "FCFS" || self.type == "RR":
+            pass
+        elif self.type == "SJF" || self.type == "PSFJ":
+            sorted(self.inMemProcs, key=lambda Process: Process.time_req)
             #organize by inMemProcs.time_req (think about which one is currentProc)
         #elif self.type == "Pri":
             
