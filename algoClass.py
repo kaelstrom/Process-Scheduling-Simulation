@@ -16,6 +16,7 @@ class algoClass(object):
         self.toAddProcs = copy.deepcopy(procList)
         self.organizeProcs()
         self.currentProc = self.inMemProcs[0]
+        self.currentSlice = 0
         
     #runs the current process in cpu
     def run(self):
@@ -110,7 +111,11 @@ class algoClass(object):
             if self.findProc(self.currentProc)!=0:
                 self.contextSwitch(self.inMemProcs[0])
         elif self.type == "RR":
-            pass
+            if self.currentSlice >= self.timeSlice:
+                self.contextSwitch(self.inMemProcs[1])
+                self.currentSlice = 0
+            else:
+                self.currentSlice += 1
             #if time slice is over
                 #self.contextSwitch(self.inMemProcs[1])
         elif self.type == "PRI":
