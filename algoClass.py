@@ -70,21 +70,24 @@ class algoClass(object):
             
     #finds the process given in the self.inMemProcs list
     #return -1 if not found
-    def findProc(self, givenProc):
-    #switches a process into the cpu
-        pass
+    def findProc(self, givenProc):  
+        for i in range(0, len(self.inMemProcs)):
+            if self.inMemProcs[i].pid == givenProc.pid:
+                return i
+        return -1
     
     #check if round robin, else just switch and do normally
     def contextSwitch(self, nextProc):
         if self.currentProc.isDone():
             self.output(["finished", self.currentProc])
-        self.output(["cs", self.currentProc, nextProc])
-            #if self.type == "RR":
-                #tempProc = self.inMemProcs[0]
-                #self.inMemProcs.remove(self.inMemProcs[0])
-                #self.inMemProcs.append(tempProc)
-            #elif self.type == "PSJF"|| self.type =="PRI":
-                #self.currentProc = nextProc
+        else:
+            self.output(["cs", self.currentProc, nextProc])
+            if self.type == "RR":
+                tempProc = self.inMemProcs[0]
+                self.inMemProcs.remove(self.inMemProcs[0])
+                self.inMemProcs.append(tempProc)
+            elif self.type == "PSJF"|| self.type =="PRI":
+                self.currentProc = nextProc
         self.currentProc = nextProc
         self.time[0] += timeCS
         
@@ -110,6 +113,8 @@ class algoClass(object):
             elif self.type == "FCFS" or self.type == "SJF":
                 return 0;
             elif self.type == "PSJF":
+                if self.findProc(self.currentProc) ==-1:
+                    print("ERROR: COULD NOT FIND PROCESS IN MEMORY")
                 if self.findProc(self.currentProc)!=0:
                     self.contextSwitch(self.inMemProcs[0])
             elif self.type == "RR":
@@ -118,8 +123,6 @@ class algoClass(object):
                     self.currentSlice = 0
                 else:
                     self.currentSlice += 1
-                #if time slice is over
-                    #self.contextSwitch(self.inMemProcs[1])
             elif self.type == "PRI":
                 if self.currentProc != self.inMemProcs[0]:
                     self.contextSwitch(self.inMemProcs[0])
