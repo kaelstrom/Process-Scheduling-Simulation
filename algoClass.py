@@ -121,7 +121,6 @@ class algoClass(object):
                 #if time slice is over
                     #self.contextSwitch(self.inMemProcs[1])
             elif self.type == "PRI":
-                self.organizeProcs()
                 if self.currentProc != self.inMemProcs[0]:
                     self.contextSwitch(self.inMemProcs[0])
                 

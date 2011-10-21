@@ -37,8 +37,9 @@ def runAlgo( algo, stats ):
     time[0] = 0
     print("Beginning a run of %s" % algo.type)
     while( time[0] < 100000 ):
-        algo.checkSwitch()
         algo.run()
+        algo.organizeProcs()
+        algo.checkSwitch()
     outputStats(algo.stats)
     time[0] = 0
         
