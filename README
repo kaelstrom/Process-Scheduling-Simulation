@@ -1,0 +1,8 @@
+# Nathan Black, Kyle Johnsen
+# Op Sys Project 1
+# Process Scheduling Simulation
+# 10/20/11
+# Tested on Python 2.7
+
+with python 2.7 installed, just run
+python main.py
