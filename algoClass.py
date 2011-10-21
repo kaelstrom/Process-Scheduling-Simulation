@@ -120,7 +120,7 @@ class algoClass(object):
                 if self.findProc(self.currentProc)!=0:
                     self.contextSwitch(self.inMemProcs[0])
             elif self.type == "RR":
-                if self.currentSlice >= self.timeSlice:
+                if self.currentSlice >= timeSlice and len(self.inMemProcs)>1:
                     self.contextSwitch(self.inMemProcs[1])
                     self.currentSlice = 0
                 else:
