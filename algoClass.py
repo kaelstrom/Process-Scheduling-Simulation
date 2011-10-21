@@ -52,8 +52,7 @@ class algoClass(object):
     #adds a process to memory
     def organizeProcs(self):
         for proc in self.toAddProcs:
-            j = len(self.inMemProcs)
-            if proc.start_time == self.time[0]:
+            if proc.start_time == self.time[0] && self.time[0]!=0:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
                 self.toAddProcs.remove(proc)
