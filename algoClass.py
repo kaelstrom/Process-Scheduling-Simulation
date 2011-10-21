@@ -63,9 +63,10 @@ class algoClass(object):
         if self.type == "FCFS" or self.type == "RR":
             pass
         elif self.type == "SJF" or self.type == "PSFJ":
-            sorted(self.inMemProcs, key=lambda Process: Process.time_req - Process.run_progress)
+            self.inMemProcs = sorted(self.inMemProcs, key=lambda Process: Process.time_req - Process.run_progress)
             #organize by inMemProcs.time_req (think about which one is currentProc)
-        #elif self.type == "Pri":
+        elif self.type == "PRI":
+            self.inMemProcs = sorted(self.inMemProcs, key=lambda Process: Process.priority)
             
     #finds the process given in the self.inMemProcs list
     #return -1 if not found
@@ -89,37 +90,40 @@ class algoClass(object):
         
     #checks if process needs to be switched based on the algorithm
     def checkSwitch(self):
-        if self.currentProc == "IDLE":
-            pass
-        elif self.currentProc.isDone():
-            #turnaround
-            self.stats[self.currentProc.pid][0] = self.time[0] - self.currentProc.start_time
-            #total wait
-            self.stats[self.currentProc.pid][2] = (self.time[0]  - self.currentProc.start_time) - self.currentProc.time_req
+        if len(self.inMemProcs) != 0:
+            if self.currentProc == "IDLE":
+                pass
+            elif self.currentProc.isDone():
+                #turnaround
+                self.stats[self.currentProc.pid][0] = self.time[0] - self.currentProc.start_time
+                #total wait
+                self.stats[self.currentProc.pid][2] = (self.time[0]  - self.currentProc.start_time) - self.currentProc.time_req
+                    
+                if len(self.inMemProcs) > 1:
+                    self.contextSwitch(self.inMemProcs[1])
+                    self.inMemProcs.remove(self.inMemProcs[0])
+                else:
+                    self.output(["finished", self.currentProc])
+                    self.inMemProcs.remove(self.inMemProcs[0])
+                    self.currentProc = "IDLE"
+                    
+            elif self.type == "FCFS" or self.type == "SJF":
+                return 0;
+            elif self.type == "PSJF":
+                if self.findProc(self.currentProc)!=0:
+                    self.contextSwitch(self.inMemProcs[0])
+            elif self.type == "RR":
+                if self.currentSlice >= self.timeSlice:
+                    self.contextSwitch(self.inMemProcs[1])
+                    self.currentSlice = 0
+                else:
+                    self.currentSlice += 1
+                #if time slice is over
+                    #self.contextSwitch(self.inMemProcs[1])
+            elif self.type == "PRI":
+                self.organizeProcs()
+                if self.currentProc != self.inMemProcs[0]:
+                    self.contextSwitch(self.inMemProcs[0])
                 
-            if len(self.inMemProcs) > 1:
-                self.contextSwitch(self.inMemProcs[1])
-                self.inMemProcs.remove(self.inMemProcs[0])
             else:
-                self.output(["finished", self.currentProc])
-                self.inMemProcs.remove(self.inMemProcs[0])
-                self.currentProc = "IDLE"
-                
-        if self.type == "FCFS" or self.type == "SJF":
-            return 0;
-        elif self.type == "PSJF":
-            if self.findProc(self.currentProc)!=0:
-                self.contextSwitch(self.inMemProcs[0])
-        elif self.type == "RR":
-            if self.currentSlice >= self.timeSlice:
-                self.contextSwitch(self.inMemProcs[1])
-                self.currentSlice = 0
-            else:
-                self.currentSlice += 1
-            #if time slice is over
-                #self.contextSwitch(self.inMemProcs[1])
-        elif self.type == "PRI":
-            pass
-            #do whatever
-        else:
-            print("error, invalid algorithm\n choices are FCFS SJF PSJF RR PRI\n")
+                print("error, invalid algorithm\n choices are FCFS SJF PSJF RR PRI\n")

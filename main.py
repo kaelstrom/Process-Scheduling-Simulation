@@ -38,18 +38,19 @@ def runAlgo( algo, stats ):
     while( time[0] < 100000 ):
         algo.checkSwitch()
         algo.run()
-    outputStats(algoFCFS.stats)
+    outputStats(algo.stats)
+    time[0] = 0
         
 
 algoFCFS = algoClass("FCFS", procs, time, stats) 
-runAlgo(algoFCFS, stats)    
+runAlgo(algoFCFS, stats)
 #algoSJF = algoClass("SJF", procs, time, stats)  
-#runAlgo(algoSJF)   
+#runAlgo(algoSJF, stats)   
 #algoPSJF = algoClass("PSJF", procs, time, stats) 
-#runAlgo(algoPSJF)    
+#runAlgo(algoPSJF, stats)    
 #algoRR = algoClass("RR", procs, time, stats)   
-#runAlgo(algoRR)  
-#algoPRI = algoClass("PRI", procs, time, stats)
-#runAlgo(algoPRI)
+#runAlgo(algoRR, stats)  
+algoPRI = algoClass("PRI", procs, time, stats)
+runAlgo(algoPRI, stats)
 
 
