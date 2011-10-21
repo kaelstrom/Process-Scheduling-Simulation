@@ -18,12 +18,12 @@ def outputStats(stats):
     initwaits = [x[1] for x in stats]
     totwaits = [x[2] for x in stats]
     
-    print("               Max    Min    Avg")
-    print("Turnaround     %dms   %dms   %dms"
+    print("               Max        Min        Avg")
+    print("Turnaround     %dms       %dms       %dms"
         %(max(turnarounds), min(turnarounds), sum(turnarounds)/len(turnarounds)))
-    print("Initial Wait   %dms   %dms   %dms"
+    print("Initial Wait   %dms       %dms       %dms"
         %(max(initwaits), min(initwaits), sum(initwaits)/len(initwaits)))
-    print("Total Wait     %dms   %dms   %dms"
+    print("Total Wait     %dms       %dms       %dms"
         %(max(totwaits), min(totwaits), sum(totwaits)/len(totwaits)))
 
 def makeProcs():
@@ -32,20 +32,17 @@ def makeProcs():
     
 makeProcs()
     
-def runAlgo( algo ):
-    global stats
+def runAlgo( algo, stats ):
     time[0] = 0
-    stats = [[0, 0, 0] for i in range(numProcs)]
     print("Beginning a run of %s" % algo.type)
     while( time[0] < 100000 ):
         algo.checkSwitch()
         algo.run()
-    print(stats)
-    outputStats(stats)
+    outputStats(algoFCFS.stats)
         
 
 algoFCFS = algoClass("FCFS", procs, time, stats) 
-runAlgo(algoFCFS)    
+runAlgo(algoFCFS, stats)    
 #algoSJF = algoClass("SJF", procs, time, stats)  
 #runAlgo(algoSJF)   
 #algoPSJF = algoClass("PSJF", procs, time, stats) 

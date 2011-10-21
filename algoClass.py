@@ -20,11 +20,12 @@ class algoClass(object):
     #runs the current process in cpu
     def run(self):
         #if new to CPU, output so
-        if self.currentProc.run_progress == 0:
-            self.output(["started", self.currentProc])
-            self.stats[self.currentProc.pid][1] = self.time[0]
-        if not self.currentProc.isDone():
-            self.currentProc.run(1)
+        if self.currentProc != "IDLE":
+            if self.currentProc.run_progress == 0:
+                self.output(["started", self.currentProc])
+                self.stats[self.currentProc.pid][1] = self.time[0]
+            if not self.currentProc.isDone():
+                self.currentProc.run(1)
         self.time[0] += 1
         
     #outputs information 
@@ -87,12 +88,22 @@ class algoClass(object):
         
     #checks if process needs to be switched based on the algorithm
     def checkSwitch(self):
-        if self.currentProc.isDone():
+        if self.currentProc == "IDLE":
+            pass
+        elif self.currentProc.isDone():
+            #turnaround
+            self.stats[self.currentProc.pid][0] = self.time[0] - self.currentProc.start_time
+            #total wait
+            self.stats[self.currentProc.pid][2] = (self.time[0]  - self.currentProc.start_time) - self.currentProc.time_req
+                
             if len(self.inMemProcs) > 1:
-                self.stats[self.currentProc.pid][0] = self.time[0] - self.currentProc.start_time
-                self.stats[self.currentProc.pid][2] = self.time[0] - self.currentProc.time_req - self.currentProc.start_time
                 self.contextSwitch(self.inMemProcs[1])
                 self.inMemProcs.remove(self.inMemProcs[0])
+            else:
+                self.output(["finished", self.currentProc])
+                self.inMemProcs.remove(self.inMemProcs[0])
+                self.currentProc = "IDLE"
+                
         if self.type == "FCFS" or self.type == "SJF":
             return 0;
         elif self.type == "PSJF":
