@@ -14,9 +14,11 @@ class algoClass(object):
         self.inMemProcs = []
         self.time = rtime
         self.toAddProcs = copy.deepcopy(procList)
+        self.currentSlice = 0
+        
+    def start(self):
         self.organizeProcs()
         self.currentProc = self.inMemProcs[0]
-        self.currentSlice = 0
         
     #runs the current process in cpu
     def run(self):
@@ -24,10 +26,13 @@ class algoClass(object):
         if self.currentProc != "IDLE":
             if self.currentProc.run_progress == 0:
                 self.output(["started", self.currentProc])
-                self.stats[self.currentProc.pid][1] = self.time[0]
             if not self.currentProc.isDone():
                 self.currentProc.run(1)
         self.time[0] += 1
+        
+    def allDone(self):
+        maxStartTime = max([x.start_time for x in self.toAddProcs])
+        return self.time[0] > maxStartTime and len(self.inMemProcs) == 0
         
     #outputs information 
     def output(self, args):
@@ -40,7 +45,8 @@ class algoClass(object):
             proc = args[1]
             print("[time: %dms] Process %d accessed CPU for the first time (initial wait time %dms)" 
                     %(self.time[0], proc.pid, (self.time[0] - proc.start_time)))
-            proc.initwait = (self.time[0] - proc.start_time)
+            #track initial wait time
+            self.stats[self.currentProc.pid][1] = self.time[0] - proc.start_time
         elif args[0] == "cs":
             proc1 = args[1]
             proc2 = args[2]
@@ -50,8 +56,10 @@ class algoClass(object):
             proc = args[1]
             print("[time: %dms] Process %d terminated (turnaround time %dms, total wait time %dms)"
                     %(self.time[0], proc.pid, (self.time[0]-proc.start_time), (self.time[0]-proc.start_time-proc.time_req)))
-            #proc.totwait = (self.time[0]-proc.start_time-proc.time_req)
-            #proc.turnaround = (self.time[0]-proc.start_time)
+            #track turnaround time
+            self.stats[self.currentProc.pid][0] = self.time[0] - self.currentProc.start_time
+            #track total wait time
+            self.stats[self.currentProc.pid][2] = (self.time[0]  - self.currentProc.start_time) - self.currentProc.time_req
     
     #adds a process to memory
     def organizeProcs(self):
@@ -59,7 +67,6 @@ class algoClass(object):
             if proc.start_time == self.time[0]:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
-        #self.toAddProcs = []
         if self.type == "FCFS" or self.type == "RR":
             pass
         elif self.type == "SJF" or self.type == "PSJF":
@@ -80,14 +87,13 @@ class algoClass(object):
     def contextSwitch(self, nextProc):
         if self.currentProc.isDone():
             self.output(["finished", self.currentProc])
-        else:
-            self.output(["cs", self.currentProc, nextProc])
-            if self.type == "RR":
-                tempProc = self.inMemProcs[0]
-                self.inMemProcs.remove(self.inMemProcs[0])
-                self.inMemProcs.append(tempProc)
-            elif self.type == "PSJF"|| self.type =="PRI":
-                self.currentProc = nextProc
+        if self.type == "RR":
+            tempProc = self.inMemProcs[0]
+            self.inMemProcs.remove(self.inMemProcs[0])
+            self.inMemProcs.append(tempProc)
+        elif self.type == "PSJF" or self.type =="PRI":
+            self.currentProc = nextProc
+        self.output(["cs", self.currentProc, nextProc])
         self.currentProc = nextProc
         self.time[0] += timeCS
         
@@ -95,12 +101,8 @@ class algoClass(object):
     def checkSwitch(self):
         if len(self.inMemProcs) != 0:
             if self.currentProc == "IDLE":
-                pass
+                self.time[0] += 1
             elif self.currentProc.isDone():
-                #turnaround
-                self.stats[self.currentProc.pid][0] = self.time[0] - self.currentProc.start_time
-                #total wait
-                self.stats[self.currentProc.pid][2] = (self.time[0]  - self.currentProc.start_time) - self.currentProc.time_req
                     
                 if len(self.inMemProcs) > 1:
                     self.contextSwitch(self.inMemProcs[1])

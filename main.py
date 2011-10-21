@@ -29,14 +29,20 @@ def outputStats(stats):
 
 def makeProcs():
     global procs
+    #all processes come in at time 0
+    #procs = [Process(i, 0) for i in range(numProcs)]
+    
+    #75% of processes come in at random times
     procs = [Process(i, 0) for i in range(numProcs/4)] + [Process(i + numProcs/4, random.randint(100,2500)) for i in range(3*numProcs/4)]
+    
     
 makeProcs()
     
 def runAlgo( algo, stats ):
     time[0] = 0
     print("Beginning a run of %s" % algo.type)
-    while( time[0] < 100000 ):
+    algo.start()
+    while( not algo.allDone() ):
         algo.run()
         algo.organizeProcs()
         algo.checkSwitch()
@@ -52,7 +58,7 @@ runAlgo(algoFCFS, stats)
 #runAlgo(algoPSJF, stats)    
 #algoRR = algoClass("RR", procs, time, stats)   
 #runAlgo(algoRR, stats)  
-algoPRI = algoClass("PRI", procs, time, stats)
-runAlgo(algoPRI, stats)
+#algoPRI = algoClass("PRI", procs, time, stats)
+#runAlgo(algoPRI, stats)
 
 
