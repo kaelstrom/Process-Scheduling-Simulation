@@ -97,12 +97,6 @@ class algoClass(object):
             
         #display a context switch
         self.output(["cs", self.currentProc, nextProc])
-        
-        #round robin cycles the list
-        if self.type == "RR":
-            tempProc = self.inMemProcs[0]
-            self.inMemProcs.remove(self.inMemProcs[0])
-            self.inMemProcs.append(tempProc)
             
         #go to the next process, increment the time
         self.currentProc = nextProc
@@ -133,6 +127,11 @@ class algoClass(object):
                 if self.currentSlice >= timeSlice and len(self.inMemProcs)>1:
                     self.contextSwitch(self.inMemProcs[1])
                     self.currentSlice = 0
+                    
+                    #round robin cycles the list
+                    tempProc = self.inMemProcs[0]
+                    self.inMemProcs.remove(self.inMemProcs[0])
+                    self.inMemProcs.append(tempProc)
                 else:
                     self.currentSlice += 1
             
