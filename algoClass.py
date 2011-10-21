@@ -62,7 +62,7 @@ class algoClass(object):
         self.toAddProcs = []
         if self.type == "FCFS" or self.type == "RR":
             pass
-        elif self.type == "SJF" or self.type == "PSFJ":
+        elif self.type == "SJF" or self.type == "PSJF":
             self.inMemProcs = sorted(self.inMemProcs, key=lambda Process: Process.time_req - Process.run_progress)
             #organize by inMemProcs.time_req (think about which one is currentProc)
         elif self.type == "PRI":
