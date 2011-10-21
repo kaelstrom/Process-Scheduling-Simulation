@@ -6,3 +6,7 @@
 
 with python 2.7 installed, just run
 python main.py
+
+the PART2 flag can be set to True in main.py (note True is capitalized in python 2.7)
+
+timeSlice and timeCS can be changed at the top of algoClass.py
