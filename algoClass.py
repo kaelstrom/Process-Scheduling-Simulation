@@ -9,7 +9,7 @@ timeSlice = 100
 
 class algoClass(object):
     def __init__(self, type, procList, rtime, stats):
-        self.stats = stats
+        self.stats = copy.deepcopy(stats)
         self.type = type
         self.inMemProcs = []
         self.time = rtime
@@ -61,17 +61,22 @@ class algoClass(object):
             #track total wait time
             self.stats[self.currentProc.pid][2] = (self.time[0]  - self.currentProc.start_time) - self.currentProc.time_req
     
-    #adds a process to memory
+    #sorts ready queue by the current algorithm
     def organizeProcs(self):
+    
+        #adds jobs to queue as they arrive
         for proc in self.toAddProcs:
             if proc.start_time == self.time[0]:
                 self.output(["created", proc])
                 self.inMemProcs.append(proc)
+                
+                
         if self.type == "FCFS" or self.type == "RR":
             pass
+            
+        #sorting according to what the algo cares about, shortest remaining run time or priority
         elif self.type == "SJF" or self.type == "PSJF":
             self.inMemProcs = sorted(self.inMemProcs, key=lambda Process: Process.time_req - Process.run_progress)
-            #organize by inMemProcs.time_req (think about which one is currentProc)
         elif self.type == "PRI":
             self.inMemProcs = sorted(self.inMemProcs, key=lambda Process: Process.priority)
             
@@ -83,27 +88,35 @@ class algoClass(object):
                 return i
         return -1
     
-    #check if round robin, else just switch and do normally
+    #switch from current process to the next
     def contextSwitch(self, nextProc):
+    
+        #display a process termination
         if self.currentProc.isDone():
             self.output(["finished", self.currentProc])
+            
+        #display a context switch
+        self.output(["cs", self.currentProc, nextProc])
+        
+        #round robin cycles the list
         if self.type == "RR":
             tempProc = self.inMemProcs[0]
             self.inMemProcs.remove(self.inMemProcs[0])
             self.inMemProcs.append(tempProc)
-        elif self.type == "PSJF" or self.type =="PRI":
-            self.currentProc = nextProc
-        self.output(["cs", self.currentProc, nextProc])
+            
+        #go to the next process, increment the time
         self.currentProc = nextProc
         self.time[0] += timeCS
         
     #checks if process needs to be switched based on the algorithm
     def checkSwitch(self):
+        #only do stuff if there are processes in the ready queue
         if len(self.inMemProcs) != 0:
             if self.currentProc == "IDLE":
-                self.time[0] += 1
+                pass
             elif self.currentProc.isDone():
                     
+                #switch to the next best thing, or go idle if there isnt one
                 if len(self.inMemProcs) > 1:
                     self.contextSwitch(self.inMemProcs[1])
                     self.inMemProcs.remove(self.inMemProcs[0])
@@ -113,19 +126,18 @@ class algoClass(object):
                     self.currentProc = "IDLE"
                     
             elif self.type == "FCFS" or self.type == "SJF":
-                return 0;
-            elif self.type == "PSJF":
-                if self.findProc(self.currentProc) ==-1:
-                    print("ERROR: COULD NOT FIND PROCESS IN MEMORY")
-                if self.findProc(self.currentProc)!=0:
-                    self.contextSwitch(self.inMemProcs[0])
+                return;
+                
+            #round robin wait till the time slice expires to force a context switch
             elif self.type == "RR":
                 if self.currentSlice >= timeSlice and len(self.inMemProcs)>1:
                     self.contextSwitch(self.inMemProcs[1])
                     self.currentSlice = 0
                 else:
                     self.currentSlice += 1
-            elif self.type == "PRI":
+            
+            #if something more important tops the list, the preempt out the current process
+            elif self.type == "PRI" or self.type == "PSJF":
                 if self.currentProc != self.inMemProcs[0]:
                     self.contextSwitch(self.inMemProcs[0])
                 

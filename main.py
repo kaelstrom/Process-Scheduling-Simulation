@@ -2,6 +2,7 @@
 # Op Sys Project 1
 # Process Scheduling Simulation
 # 10/20/11
+# Tested on Python 2.7
 
 from algoClass import algoClass
 from process import Process
@@ -19,6 +20,7 @@ def outputStats(stats):
     initwaits = [x[1] for x in stats]
     totwaits = [x[2] for x in stats]
     
+    #fancy output
     print("               Max        Min        Avg")
     print("Turnaround     %dms       %dms       %.3fms"
         %(max(turnarounds), min(turnarounds), float(sum(turnarounds))/len(turnarounds)))
@@ -49,16 +51,28 @@ def runAlgo( algo, stats ):
     outputStats(algo.stats)
     time[0] = 0
         
-
+    
 algoFCFS = algoClass("FCFS", procs, time, stats) 
+algoSJF = algoClass("SJF", procs, time, stats)  
+algoPSJF = algoClass("PSJF", procs, time, stats) 
+algoRR = algoClass("RR", procs, time, stats)   
+algoPRI = algoClass("PRI", procs, time, stats)
+
+#these lines can be commented to only run certain algorithms
 runAlgo(algoFCFS, stats)
-#algoSJF = algoClass("SJF", procs, time, stats)  
-#runAlgo(algoSJF, stats)   
-#algoPSJF = algoClass("PSJF", procs, time, stats) 
-#runAlgo(algoPSJF, stats)    
-#algoRR = algoClass("RR", procs, time, stats)   
-#runAlgo(algoRR, stats)  
-#algoPRI = algoClass("PRI", procs, time, stats)
-#runAlgo(algoPRI, stats)
+runAlgo(algoSJF, stats)   
+runAlgo(algoPSJF, stats)    
+runAlgo(algoRR, stats)  
+runAlgo(algoPRI, stats)
 
-
+print("\nOverall Stats:\n")
+print("\nFirst Come First Serve:")
+outputStats(algoFCFS.stats)
+print("\nShortest Job First:")
+outputStats(algoSJF.stats)
+print("\nPreemptive Shortest Job First:")
+outputStats(algoPSJF.stats)
+print("\nRound Robin:")
+outputStats(algoRR.stats)
+print("\nPreemptive Priority:")
+outputStats(algoPRI.stats)
